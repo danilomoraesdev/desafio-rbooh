@@ -9,6 +9,7 @@ import {
   ThemeProvider,
 } from "@mui/material"
 import { theme } from "./theme"
+import { PontoList } from "./components/PontoList"
 
 import { Add } from "@mui/icons-material"
 
@@ -57,6 +58,8 @@ export function App() {
               Novo Ponto
             </Button>
           </Box>
+
+          <PontoList />
         </Container>
       </Box>
     </ThemeProvider>
