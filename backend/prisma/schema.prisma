@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PontoMidia {
+  id         String   @id @default(uuid())
+  titulo     String
+  descricao  String
+  dataInicio DateTime
+  dataFim    DateTime
+  ativo      Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("pontos_midia")
+}
