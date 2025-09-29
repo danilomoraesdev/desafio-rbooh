@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 import {
   Box,
   Button,
@@ -10,10 +12,22 @@ import {
 } from "@mui/material"
 import { theme } from "./theme"
 import { PontoList } from "./components/PontoList"
+import { PontoDialog } from "./components/PontoDialog"
+import type { DialogState, PontoType } from "./types"
 
 import { Add } from "@mui/icons-material"
 
 export function App() {
+  const [dialogState, setDialogState] = useState<DialogState>({ open: false })
+
+  const handleOpenDialog = (ponto?: PontoType) => {
+    setDialogState({ open: true, ponto })
+  }
+
+  const handleCloseDialog = () => {
+    setDialogState({ open: false })
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -54,13 +68,20 @@ export function App() {
               sx={{
                 width: { xs: "100%", sm: "auto" },
               }}
+              onClick={() => handleOpenDialog()}
             >
               Novo Ponto
             </Button>
           </Box>
 
-          <PontoList />
+          <PontoList onOpenDialog={handleOpenDialog} />
         </Container>
+
+        <PontoDialog
+          open={dialogState.open}
+          onCloseDialog={handleCloseDialog}
+          ponto={dialogState.ponto}
+        />
       </Box>
     </ThemeProvider>
   )

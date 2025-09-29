@@ -14,9 +14,10 @@ import { formatDate } from "../utils"
 
 interface PontoCardProps {
   ponto: PontoType
+  onOpenDialog: (ponto?: PontoType) => void
 }
 
-export function PontoCard({ ponto }: PontoCardProps) {
+export function PontoCard({ ponto, onOpenDialog }: PontoCardProps) {
   return (
     <Card
       sx={{
@@ -80,6 +81,7 @@ export function PontoCard({ ponto }: PontoCardProps) {
           title="Editar"
           color="primary"
           icon={<Edit fontSize="small" />}
+          onClick={() => onOpenDialog(ponto)}
         />
         <IconButton
           title="Excluir"

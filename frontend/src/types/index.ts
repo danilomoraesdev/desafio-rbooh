@@ -6,3 +6,8 @@ export type PontoType = {
   dataFim: Date
   ativo: boolean
 }
+
+export type DialogState = {
+  open: boolean
+  ponto?: PontoType
+}

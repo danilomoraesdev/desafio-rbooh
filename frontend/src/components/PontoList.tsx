@@ -25,7 +25,11 @@ const pontosMock: PontoType[] = [
   },
 ]
 
-export function PontoList() {
+interface PontoListProps {
+  onOpenDialog: (ponto?: PontoType) => void
+}
+
+export function PontoList({ onOpenDialog }: PontoListProps) {
   const [pontos, setPontos] = useState<PontoType[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -90,7 +94,7 @@ export function PontoList() {
     <Grid container spacing={3}>
       {pontos.map((ponto) => (
         <Grid size={{ xs: 12, sm: 6, md: 4 }} key={ponto.id}>
-          <PontoCard ponto={ponto} />
+          <PontoCard ponto={ponto} onOpenDialog={onOpenDialog} />
         </Grid>
       ))}
     </Grid>
