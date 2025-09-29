@@ -1,8 +1,10 @@
-import { Box, Grid, Typography } from "@mui/material"
+import { Box, Grid, Typography, CircularProgress } from "@mui/material"
 import { PontoCard } from "./PontoCard"
+import { useEffect, useState } from "react"
 import type { PontoType } from "../types"
+import { api } from "../utils/api"
 
-const pontos: PontoType[] = [
+const pontosMock: PontoType[] = [
   {
     id: "1",
     titulo: "Outdoor Av. Brasil, 301",
@@ -24,14 +26,57 @@ const pontos: PontoType[] = [
 ]
 
 export function PontoList() {
+  const [pontos, setPontos] = useState<PontoType[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchPontos = async () => {
+      setLoading(true)
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+        setPontos(pontosMock)
+        return
+        const response = await api.get("/pontos")
+        setPontos(response.data)
+      } catch (error) {
+        setError("Erro")
+        console.error("Erro ao buscar pontos:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPontos()
+  }, [])
+
+  if (loading) {
+    return (
+      <Box sx={{ py: 8, textAlign: "center" }}>
+        <CircularProgress />
+        <Typography variant="h5" color="text.secondary" mt={2}>
+          Carregando pontos...
+        </Typography>
+      </Box>
+    )
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ py: 8, textAlign: "center" }}>
+        <Typography variant="h5" color="error">
+          Erro ao carregar pontos
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          {error}
+        </Typography>
+      </Box>
+    )
+  }
+
   if (!pontos?.length)
     return (
-      <Box
-        sx={{
-          py: 8,
-          textAlign: "center",
-        }}
-      >
+      <Box sx={{ py: 8, textAlign: "center" }}>
         <Typography variant="h5" color="text.secondary" gutterBottom>
           Nenhum ponto cadastrado
         </Typography>
