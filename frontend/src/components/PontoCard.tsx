@@ -15,9 +15,10 @@ import { formatDate } from "../utils"
 interface PontoCardProps {
   ponto: PontoType
   onOpenDialog: (ponto?: PontoType) => void
+  onDelete: (id: string) => void
 }
 
-export function PontoCard({ ponto, onOpenDialog }: PontoCardProps) {
+export function PontoCard({ ponto, onOpenDialog, onDelete }: PontoCardProps) {
   return (
     <Card
       sx={{
@@ -87,6 +88,7 @@ export function PontoCard({ ponto, onOpenDialog }: PontoCardProps) {
           title="Excluir"
           color="error"
           icon={<Delete fontSize="small" />}
+          onClick={() => onDelete(ponto.id)}
         />
       </CardActions>
     </Card>

@@ -1,6 +1,7 @@
 import { Box, Grid, Typography, CircularProgress } from "@mui/material"
 import { PontoCard } from "./PontoCard"
-import { useEffect, useState } from "react"
+import { DeleteDialog } from "./DeleteDialog"
+import { useEffect, useState, useCallback } from "react"
 import type { PontoType } from "../types"
 import { api } from "../utils/api"
 
@@ -33,26 +34,58 @@ export function PontoList({ onOpenDialog }: PontoListProps) {
   const [pontos, setPontos] = useState<PontoType[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean
+    ponto?: PontoType
+  }>({ open: false })
+
+  const fetchPontos = useCallback(async () => {
+    setLoading(true)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      setPontos(pontosMock)
+      return
+      const response = await api.get("/pontos")
+      setPontos(response.data)
+    } catch (error) {
+      setError("Erro")
+      console.error("Erro ao buscar pontos:", error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
-    const fetchPontos = async () => {
-      setLoading(true)
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        setPontos(pontosMock)
-        return
-        const response = await api.get("/pontos")
-        setPontos(response.data)
-      } catch (error) {
-        setError("Erro")
-        console.error("Erro ao buscar pontos:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchPontos()
-  }, [])
+  }, [fetchPontos])
+
+  const handleDeleteClick = (id: string) => {
+    const ponto = pontos.find((p) => p.id === id)
+    setDeleteDialog({
+      open: true,
+      ponto: ponto,
+    })
+  }
+
+  const handleDeleteConfirm = async () => {
+    const id = deleteDialog.ponto?.id
+    if (!id) return
+
+    try {
+      return
+      await api.delete(`/pontos/${id}`)
+      await fetchPontos()
+    } catch (error) {
+      console.error("Erro ao excluir ponto:", error)
+      setError("Erro ao excluir ponto")
+    } finally {
+      setDeleteDialog({ open: false })
+    }
+  }
+
+  const handleDeleteCancel = () => {
+    setDeleteDialog({ open: false })
+  }
 
   if (loading) {
     return (
@@ -91,12 +124,25 @@ export function PontoList({ onOpenDialog }: PontoListProps) {
     )
 
   return (
-    <Grid container spacing={3}>
-      {pontos.map((ponto) => (
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={ponto.id}>
-          <PontoCard ponto={ponto} onOpenDialog={onOpenDialog} />
-        </Grid>
-      ))}
-    </Grid>
+    <>
+      <Grid container spacing={3}>
+        {pontos.map((ponto) => (
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={ponto.id}>
+            <PontoCard
+              ponto={ponto}
+              onOpenDialog={onOpenDialog}
+              onDelete={handleDeleteClick}
+            />
+          </Grid>
+        ))}
+      </Grid>
+
+      <DeleteDialog
+        open={deleteDialog.open}
+        title={deleteDialog.ponto?.titulo || ""}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
+    </>
   )
 }
