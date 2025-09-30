@@ -15,13 +15,14 @@ Stack: **NestJS + Prisma**, **React + Vite + TypeScript**, **PostgreSQL** e **Do
 
 ### Configuração Inicial
 
-1. Clone o repositório e copie o arquivo de variáveis de ambiente:
+1. Clone o repositório e copie os arquivos de variáveis de ambiente:
 
 ```bash
 cp .env.example .env
+cp backend/.env.example backend/.env
 ```
 
-2. Ajuste as variáveis no arquivo `.env` se necessário (valores padrão já funcionam).
+2. Ajuste as variáveis nos arquivos `.env` se necessário (valores padrão já funcionam).
 
 ---
 
