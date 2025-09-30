@@ -5,27 +5,6 @@ import { useEffect, useState, useCallback } from "react"
 import type { PontoType } from "../types"
 import { api } from "../utils/api"
 
-const pontosMock: PontoType[] = [
-  {
-    id: "1",
-    titulo: "Outdoor Av. Brasil, 301",
-    descricao:
-      "Painel publicitário localizado na Av. Brasil, com alta visibilidade e grande fluxo de pedestres e veículos",
-    dataInicio: new Date("2025-01-01"),
-    dataFim: new Date("2025-06-01"),
-    ativo: true,
-  },
-  {
-    id: "2",
-    titulo: "Painel LED Shopping Flamboyant",
-    descricao:
-      "Painel digital LED instalado na praça de alimentação do Shopping Flamboyant",
-    dataInicio: new Date("2025-03-01"),
-    dataFim: new Date("2025-09-01"),
-    ativo: false,
-  },
-]
-
 interface PontoListProps {
   onOpenDialog: (ponto?: PontoType) => void
 }
@@ -42,10 +21,7 @@ export function PontoList({ onOpenDialog }: PontoListProps) {
   const fetchPontos = useCallback(async () => {
     setLoading(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      setPontos(pontosMock)
-      return
-      const response = await api.get("/pontos")
+      const response = await api.get("/pontos-midia")
       setPontos(response.data)
     } catch (error) {
       setError("Erro")
@@ -72,12 +48,11 @@ export function PontoList({ onOpenDialog }: PontoListProps) {
     if (!id) return
 
     try {
-      return
-      await api.delete(`/pontos/${id}`)
+      await api.delete(`/pontos-midia/${id}`)
       await fetchPontos()
     } catch (error) {
+      alert("Ocorreu um erro ao excluir o ponto")
       console.error("Erro ao excluir ponto:", error)
-      setError("Erro ao excluir ponto")
     } finally {
       setDeleteDialog({ open: false })
     }

@@ -59,14 +59,17 @@ export default function PontoForm({ ponto, onCloseDialog }: PontoFormProps) {
   })
 
   const onSubmit = async (data: FormType) => {
-    console.log("Dados do formulário:", data)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    onCloseDialog()
-    return
-    if (ponto) {
-      await api.put(`/pontos/${ponto?.id}`, data)
-    } else {
-      await api.post("/pontos", data)
+    try {
+      if (ponto) {
+        await api.put(`/pontos-midia/${ponto?.id}`, data)
+      } else {
+        await api.post("/pontos-midia", data)
+      }
+    } catch (error) {
+      alert("Ocorreu um erro ao salvar o formulário")
+      console.error(error)
+    } finally {
+      onCloseDialog()
     }
   }
 
