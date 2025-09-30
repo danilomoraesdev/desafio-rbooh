@@ -57,8 +57,8 @@ export default function PontoForm({
     defaultValues: {
       titulo: ponto?.titulo || "",
       descricao: ponto?.descricao || "",
-      dataInicio: ponto?.dataInicio || new Date(),
-      dataFim: ponto?.dataFim || new Date(),
+      dataInicio: ponto?.dataInicio ? new Date(ponto.dataInicio) : new Date(),
+      dataFim: ponto?.dataFim ? new Date(ponto.dataFim) : new Date(),
       ativo: ponto?.ativo ?? true,
     },
   })
@@ -93,6 +93,7 @@ export default function PontoForm({
                   label="Nome do Ponto"
                   placeholder="Ex: Outdoor Av. Paulista 1200"
                   fullWidth
+                  autoFocus
                   error={!!errors.titulo}
                   helperText={errors.titulo?.message}
                 />

@@ -28,7 +28,12 @@ export function PontoDialog({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
   return (
-    <Dialog open={open} onClose={onCloseDialog} fullScreen={isMobile}>
+    <Dialog
+      open={open}
+      onClose={onCloseDialog}
+      fullScreen={isMobile}
+      disableRestoreFocus
+    >
       <DialogTitle sx={{ display: "flex", alignItems: "center" }}>
         {isMobile && (
           <IconButton
