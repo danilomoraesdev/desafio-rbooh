@@ -41,13 +41,15 @@ export class PontosMidiaService {
   async update(id: string, updatePontoMidiaDto: UpdatePontoMidiaDto) {
     await this.findOne(id);
 
-    const data: any = { ...updatePontoMidiaDto };
-    if (updatePontoMidiaDto.dataInicio) {
-      data.dataInicio = new Date(updatePontoMidiaDto.dataInicio);
-    }
-    if (updatePontoMidiaDto.dataFim) {
-      data.dataFim = new Date(updatePontoMidiaDto.dataFim);
-    }
+    const data = {
+      ...updatePontoMidiaDto,
+      ...(updatePontoMidiaDto.dataInicio && {
+        dataInicio: new Date(updatePontoMidiaDto.dataInicio),
+      }),
+      ...(updatePontoMidiaDto.dataFim && {
+        dataFim: new Date(updatePontoMidiaDto.dataFim),
+      }),
+    };
 
     return this.prisma.pontoMidia.update({
       where: { id },
