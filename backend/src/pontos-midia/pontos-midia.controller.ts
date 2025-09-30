@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PontosMidiaService } from './pontos-midia.service';
@@ -32,8 +33,8 @@ export class PontosMidiaController {
   @Get()
   @ApiOperation({ summary: 'Listar todos os pontos de mídia' })
   @ApiResponse({ status: 200, description: 'Lista de pontos de mídia' })
-  findAll() {
-    return this.pontosMidiaService.findAll();
+  findAll(@Query('status') status?: string) {
+    return this.pontosMidiaService.findAll(status);
   }
 
   @Put(':id')

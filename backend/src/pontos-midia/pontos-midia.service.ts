@@ -17,8 +17,11 @@ export class PontosMidiaService {
     });
   }
 
-  async findAll() {
+  async findAll(status?: string) {
+    const where = status ? { ativo: status === 'ativo' } : {};
+
     return this.prisma.pontoMidia.findMany({
+      where,
       orderBy: { createdAt: 'desc' },
     });
   }
