@@ -4,9 +4,13 @@ import {
   Box,
   Button,
   AppBar,
+  Select,
   Toolbar,
+  MenuItem,
   Container,
   Typography,
+  InputLabel,
+  FormControl,
   CssBaseline,
   ThemeProvider,
 } from "@mui/material"
@@ -23,11 +27,13 @@ export function App() {
   const [pontos, setPontos] = useState<PontoType[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [statusFilter, setStatusFilter] = useState<string>("todos")
 
   const fetchPontos = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await api.get("/pontos-midia")
+      const params = statusFilter !== "todos" ? { status: statusFilter } : {}
+      const response = await api.get("/pontos-midia", { params })
       setPontos(response.data)
     } catch (error) {
       setError("Erro")
@@ -35,7 +41,7 @@ export function App() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [statusFilter])
 
   useEffect(() => {
     fetchPontos()
@@ -83,16 +89,39 @@ export function App() {
               </Typography>
             </Box>
 
-            <Button
-              variant="contained"
-              startIcon={<Add />}
+            <Box
               sx={{
+                display: "flex",
+                gap: 2,
                 width: { xs: "100%", sm: "auto" },
               }}
-              onClick={() => handleOpenDialog()}
             >
-              Novo Ponto
-            </Button>
+              <FormControl sx={{ minWidth: 150 }}>
+                <InputLabel id="status-filter-label">Status</InputLabel>
+                <Select
+                  labelId="status-filter-label"
+                  id="status-filter"
+                  value={statusFilter}
+                  label="Status"
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <MenuItem value="todos">Todos</MenuItem>
+                  <MenuItem value="ativo">Ativos</MenuItem>
+                  <MenuItem value="inativo">Inativos</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Button
+                variant="contained"
+                startIcon={<Add />}
+                sx={{
+                  width: { xs: "100%", sm: "auto" },
+                }}
+                onClick={() => handleOpenDialog()}
+              >
+                Novo Ponto
+              </Button>
+            </Box>
           </Box>
 
           <PontoList
