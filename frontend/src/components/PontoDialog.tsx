@@ -15,9 +15,15 @@ interface PontoDialogProps {
   open: boolean
   onCloseDialog: () => void
   ponto?: PontoType
+  fetchPontos: () => Promise<void>
 }
 
-export function PontoDialog({ open, onCloseDialog, ponto }: PontoDialogProps) {
+export function PontoDialog({
+  open,
+  onCloseDialog,
+  ponto,
+  fetchPontos,
+}: PontoDialogProps) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -39,7 +45,11 @@ export function PontoDialog({ open, onCloseDialog, ponto }: PontoDialogProps) {
       </DialogTitle>
 
       <DialogContent>
-        <PontoForm ponto={ponto} onCloseDialog={onCloseDialog} />
+        <PontoForm
+          ponto={ponto}
+          onCloseDialog={onCloseDialog}
+          fetchPontos={fetchPontos}
+        />
       </DialogContent>
     </Dialog>
   )

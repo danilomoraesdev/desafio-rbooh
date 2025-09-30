@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import {
   Box,
@@ -16,9 +16,30 @@ import { PontoDialog } from "./components/PontoDialog"
 import type { DialogState, PontoType } from "./types"
 
 import { Add } from "@mui/icons-material"
+import { api } from "./utils/api"
 
 export function App() {
   const [dialogState, setDialogState] = useState<DialogState>({ open: false })
+  const [pontos, setPontos] = useState<PontoType[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchPontos = useCallback(async () => {
+    setLoading(true)
+    try {
+      const response = await api.get("/pontos-midia")
+      setPontos(response.data)
+    } catch (error) {
+      setError("Erro")
+      console.error("Erro ao buscar pontos:", error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchPontos()
+  }, [fetchPontos])
 
   const handleOpenDialog = (ponto?: PontoType) => {
     setDialogState({ open: true, ponto })
@@ -74,13 +95,20 @@ export function App() {
             </Button>
           </Box>
 
-          <PontoList onOpenDialog={handleOpenDialog} />
+          <PontoList
+            onOpenDialog={handleOpenDialog}
+            pontos={pontos}
+            fetchPontos={fetchPontos}
+            loading={loading}
+            error={error}
+          />
         </Container>
 
         <PontoDialog
           open={dialogState.open}
           onCloseDialog={handleCloseDialog}
           ponto={dialogState.ponto}
+          fetchPontos={fetchPontos}
         />
       </Box>
     </ThemeProvider>

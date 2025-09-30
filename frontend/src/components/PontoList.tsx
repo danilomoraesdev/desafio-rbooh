@@ -1,39 +1,29 @@
 import { Box, Grid, Typography, CircularProgress } from "@mui/material"
 import { PontoCard } from "./PontoCard"
 import { DeleteDialog } from "./DeleteDialog"
-import { useEffect, useState, useCallback } from "react"
+import { useState } from "react"
 import type { PontoType } from "../types"
 import { api } from "../utils/api"
 
 interface PontoListProps {
   onOpenDialog: (ponto?: PontoType) => void
+  pontos: PontoType[]
+  fetchPontos: () => Promise<void>
+  loading: boolean
+  error: string | null
 }
 
-export function PontoList({ onOpenDialog }: PontoListProps) {
-  const [pontos, setPontos] = useState<PontoType[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+export function PontoList({
+  onOpenDialog,
+  pontos,
+  fetchPontos,
+  loading,
+  error,
+}: PontoListProps) {
   const [deleteDialog, setDeleteDialog] = useState<{
     open: boolean
     ponto?: PontoType
   }>({ open: false })
-
-  const fetchPontos = useCallback(async () => {
-    setLoading(true)
-    try {
-      const response = await api.get("/pontos-midia")
-      setPontos(response.data)
-    } catch (error) {
-      setError("Erro")
-      console.error("Erro ao buscar pontos:", error)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchPontos()
-  }, [fetchPontos])
 
   const handleDeleteClick = (id: string) => {
     const ponto = pontos.find((p) => p.id === id)

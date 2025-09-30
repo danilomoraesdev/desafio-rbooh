@@ -40,9 +40,14 @@ type FormType = z.infer<typeof formSchema>
 interface PontoFormProps {
   ponto?: PontoType
   onCloseDialog: () => void
+  fetchPontos: () => Promise<void>
 }
 
-export default function PontoForm({ ponto, onCloseDialog }: PontoFormProps) {
+export default function PontoForm({
+  ponto,
+  onCloseDialog,
+  fetchPontos,
+}: PontoFormProps) {
   const {
     control,
     handleSubmit,
@@ -65,6 +70,7 @@ export default function PontoForm({ ponto, onCloseDialog }: PontoFormProps) {
       } else {
         await api.post("/pontos-midia", data)
       }
+      await fetchPontos()
     } catch (error) {
       alert("Ocorreu um erro ao salvar o formulário")
       console.error(error)
