@@ -1,0 +1,12 @@
+# Ambiente
+.env
+
+# Docker
+docker-compose.override.yml
+
+# Node modules
+node_modules/
+
+# Sistema
+.DS_Store
+Thumbs.db
